@@ -1,0 +1,23 @@
+/* 主題變數：之後新增主題，只需新增一組 [data-theme="..."] 變數 */
+:root,
+[data-theme="muji"] {
+  --bg: #F5F2EB;
+  --card: rgba(255, 255, 255, 0.85);
+  --text: #3E3A36;
+  --text-sub: #8A857D;
+  --line: #D9D4CA;
+  --accent: #7F0019;
+
+  --font: -apple-system, "PingFang TC", "Noto Sans TC", sans-serif;
+  --letter-spacing: 0.04em;
+  --line-height: 1.7;
+
+  --radius: 2px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 40px;
+
+  --tabbar-h: 56px;
+}
