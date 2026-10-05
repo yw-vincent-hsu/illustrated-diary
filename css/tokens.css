@@ -7,6 +7,11 @@
   --text-sub: #8A857D;
   --line: #D9D4CA;
   --accent: #7F0019;
+  --error: #B3261E;
+
+  /* 自訂背景：圖片由 JS 設定，遮罩確保文字可讀 */
+  --bg-image: none;
+  --bg-overlay: rgba(245, 242, 235, 0.85);
 
   --font: -apple-system, "PingFang TC", "Noto Sans TC", sans-serif;
   --letter-spacing: 0.04em;

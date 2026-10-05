@@ -1,6 +1,6 @@
 // Service worker：快取 App 外殼，讓離線也能開啟。
 // 修改任何靜態檔案後，請把 VERSION 加 1，舊快取才會被清掉。
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = `diary-shell-${VERSION}`;
 const SHELL = [
   './',
@@ -9,6 +9,12 @@ const SHELL = [
   'css/tokens.css',
   'css/app.css',
   'js/app.js',
+  'js/util.js',
+  'js/store.js',
+  'js/store-local.js',
+  'js/image.js',
+  'js/ai.js',
+  'js/background.js',
   'js/views/editor.js',
   'js/views/calendar.js',
   'js/views/day.js',
@@ -19,7 +25,9 @@ const SHELL = [
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  // cache: 'reload' 跳過瀏覽器的 HTTP 快取，確保抓到最新檔案
+  const requests = SHELL.map((url) => new Request(url, { cache: 'reload' }));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(requests)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {
