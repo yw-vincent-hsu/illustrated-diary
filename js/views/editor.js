@@ -34,8 +34,8 @@ export async function render(el, params = []) {
       </div>
       <p class="status" id="msg" role="status"></p>
       <button class="btn primary" type="submit" id="save">儲存</button>
+      ${entry ? '<button class="btn danger" type="button" id="delete">刪除這篇日記</button>' : ''}
     </form>
-    <section id="dayList"></section>
   `;
 
   const $ = (sel) => el.querySelector(sel);
@@ -43,7 +43,9 @@ export async function render(el, params = []) {
   const msg = $('#msg');
   const state = { newImage: null, newImageUrl: null, removed: false };
 
-  form.date.value = entry?.entry_date ?? todayTW();
+  // #/write/2026-10-05 可指定日期（從某天的列表按「在這天寫一篇」進來）
+  const presetDate = !editId && /^\d{4}-\d{2}-\d{2}$/.test(params[0] ?? '') ? params[0] : null;
+  form.date.value = entry?.entry_date ?? presetDate ?? todayTW();
   form.title.value = entry?.title ?? '';
   form.content.value = entry?.content ?? '';
 
@@ -99,33 +101,25 @@ export async function render(el, params = []) {
     updatePreview();
   });
 
-  // ---- 當天日記列表（僅新增模式）----
-  async function refreshList() {
-    const box = $('#dayList');
-    if (entry) return;
-    const list = await store.getEntriesByDate(form.date.value);
-    box.replaceChildren();
-    if (!list.length) return;
-    const h = document.createElement('h2');
-    h.textContent = `${form.date.value} 的日記`;
-    box.append(h);
-    for (const item of list) {
-      const a = document.createElement('a');
-      a.className = 'entry-item';
-      a.href = `#/entry/${item.id}`;
-      const thumb = document.createElement('div');
-      thumb.className = 'thumb';
-      store.getImageUrl(item.image_path).then((url) => {
-        if (url) thumb.style.backgroundImage = `url("${url}")`;
-      });
-      const text = document.createElement('div');
-      text.className = 'text';
-      text.textContent = item.title || item.content.slice(0, 40);
-      a.append(thumb, text);
-      box.append(a);
-    }
+  // ---- 刪除（兩段式確認：第一次按會變成「再按一次確認刪除」）----
+  const deleteBtn = $('#delete');
+  if (deleteBtn) {
+    let armed = null;
+    deleteBtn.addEventListener('click', async () => {
+      if (!armed) {
+        deleteBtn.textContent = '再按一次確認刪除';
+        armed = setTimeout(() => {
+          armed = null;
+          deleteBtn.textContent = '刪除這篇日記';
+        }, 4000);
+        return;
+      }
+      clearTimeout(armed);
+      deleteBtn.disabled = true;
+      await store.deleteEntry(entry.id);
+      location.hash = `#/day/${entry.entry_date}`;
+    });
   }
-  form.date.addEventListener('change', refreshList);
 
   // ---- 儲存 ----
   form.addEventListener('submit', async (e) => {
@@ -177,7 +171,7 @@ export async function render(el, params = []) {
     await store.saveEntry(next);
 
     if (entry) {
-      location.hash = '#/write';
+      location.hash = `#/day/${next.entry_date}`;
       return;
     }
     form.title.value = '';
@@ -185,10 +179,12 @@ export async function render(el, params = []) {
     if (state.newImageUrl) URL.revokeObjectURL(state.newImageUrl);
     Object.assign(state, { newImage: null, newImageUrl: null, removed: false });
     say('已儲存。');
+    const link = document.createElement('a');
+    link.href = `#/day/${next.entry_date}`;
+    link.textContent = '到日曆查看這天的日記';
+    msg.append(' ', link);
     updatePreview();
-    refreshList();
   }
 
   updatePreview();
-  refreshList();
 }

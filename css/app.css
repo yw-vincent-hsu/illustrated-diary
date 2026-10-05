@@ -133,7 +133,7 @@ a { color: var(--accent); }
   border-radius: var(--radius);
   overflow: hidden;
 }
-.preview img { display: block; width: 100%; max-height: 320px; object-fit: cover; }
+.preview img { display: block; width: 100%; height: auto; max-height: 75vh; object-fit: contain; }
 .preview.empty { padding: var(--space-3); color: var(--text-sub); font-size: 0.875rem; }
 
 .photo { margin-bottom: var(--space-3); }
@@ -161,3 +161,81 @@ a { color: var(--accent); }
   border-radius: var(--radius);
 }
 .entry-item .text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.btn.danger { width: 100%; margin-top: var(--space-3); color: var(--error); }
+a.btn { text-decoration: none; }
+
+/* 月曆 */
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3); }
+.cal-head h1 { margin: 0; }
+.cal-head .btn { width: 44px; padding: 0; font-size: 1.25rem; }
+
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-week { padding: var(--space-1) 0; text-align: center; font-size: 0.75rem; color: var(--text-sub); }
+
+.cal-day {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 4px 5px;
+  font-size: 0.8125rem;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--card) center / cover no-repeat;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.cal-day.today { border-color: var(--accent); }
+.cal-day.today > span { color: var(--accent); font-weight: 600; }
+.cal-day.has-image > span {
+  padding: 0 4px;
+  background: rgba(245, 242, 235, 0.85);
+  border-radius: var(--radius);
+}
+.cal-day .dot {
+  position: absolute;
+  left: 50%; bottom: 8px;
+  width: 6px; height: 6px;
+  margin-left: -3px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+.cal-day b {
+  position: absolute;
+  right: 4px; bottom: 3px;
+  min-width: 16px;
+  padding: 0 4px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-align: center;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 8px;
+}
+
+/* 某天的日記卡片 */
+.entry-card {
+  display: block;
+  margin-bottom: var(--space-3);
+  color: var(--text);
+  text-decoration: none;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.entry-card img { display: block; width: 100%; height: auto; max-height: 75vh; object-fit: contain; background: var(--line); }
+.entry-card .title { padding: var(--space-3) var(--space-3) 0; font-weight: 500; }
+.entry-card .body {
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.entry-card .title + .body { padding-top: var(--space-1); }
+.entry-card img + .body { padding-top: var(--space-3); }

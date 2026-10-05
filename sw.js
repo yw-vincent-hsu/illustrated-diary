@@ -1,6 +1,6 @@
 // Service worker：快取 App 外殼，讓離線也能開啟。
 // 修改任何靜態檔案後，請把 VERSION 加 1，舊快取才會被清掉。
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = `diary-shell-${VERSION}`;
 const SHELL = [
   './',
